@@ -1,0 +1,7 @@
+{
+  "name": "Blue Team Mentor AI",
+  "description": "An interactive, self-study cybersecurity mentor for beginners, guiding them from zero to job-ready with adaptive teaching and voice support.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

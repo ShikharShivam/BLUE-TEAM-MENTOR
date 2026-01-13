@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blue Team Mentor AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              cyber: {
+                950: '#000000', // Pure Black
+                900: '#020602', // Almost Black Green
+                800: '#051105', // Deep Dark Green
+                700: '#0a260a', // Dark Green
+                600: '#0f380f', // Forest Green
+                500: '#00ff41', // Matrix/Terminal Green
+                400: '#4dff79', // Lighter Green
+                300: '#99ffb3', // Pale Green
+                accent: '#008f11', // Darker Matrix Green
+                purple: '#00ff41', // Mapped to Green for monochrome feel
+                danger: '#ff3333', // Keep red for critical alerts
+                success: '#00ff41',
+              }
+            },
+            animation: {
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'glow': 'glow 3s ease-in-out infinite alternate',
+              'float': 'float 6s ease-in-out infinite',
+              'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+              'glitch-slide': 'glitchSlide 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both',
+              'cursor-blink': 'cursorBlink 1s step-end infinite',
+            },
+            keyframes: {
+              glow: {
+                '0%': { textShadow: '0 0 10px rgba(0, 255, 65, 0.5)' },
+                '100%': { textShadow: '0 0 20px rgba(0, 255, 65, 0.8), 0 0 30px rgba(0, 143, 17, 0.6)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              glitchSlide: {
+                '0%': { transform: 'translateX(-10px)', opacity: '0' },
+                '20%': { transform: 'translateX(10px)', opacity: '0.5' },
+                '40%': { transform: 'translateX(-5px)', opacity: '0.8' },
+                '60%': { transform: 'translateX(5px)', opacity: '1' },
+                '100%': { transform: 'translateX(0)', opacity: '1' }
+              },
+              cursorBlink: {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0' }
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #000000;
+        color: #00ff41;
+        font-size: 18px; 
+        line-height: 1.7;
+        overflow: hidden;
+      }
+      
+      ::selection {
+        background: rgba(0, 255, 65, 0.3);
+        color: #000;
+        text-shadow: none;
+      }
+
+      ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #020602; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #0f380f; 
+        border-radius: 6px;
+        border: 2px solid #020602;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #00ff41; 
+      }
+
+      /* Glow Utilities */
+      .text-glow { text-shadow: 0 0 15px rgba(0, 255, 65, 0.7); }
+      .text-glow-accent { text-shadow: 0 0 15px rgba(0, 143, 17, 0.7); }
+      .box-glow { box-shadow: 0 0 20px rgba(0, 255, 65, 0.1), inset 0 0 0 1px rgba(0, 255, 65, 0.2); }
+      .border-glow { border: 1px solid rgba(0, 255, 65, 0.5); box-shadow: 0 0 15px rgba(0, 255, 65, 0.3); }
+
+      /* Background Modes */
+      .bg-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 0;
+        transition: opacity 1.5s ease-in-out;
+      }
+
+      /* Mode 1: Grid */
+      .bg-grid-perspective {
+        perspective: 500px;
+        overflow: hidden;
+      }
+      .grid-plane {
+        position: absolute;
+        top: 0; left: -50%; width: 200%; height: 200%;
+        background-image: 
+          linear-gradient(to right, rgba(0, 255, 65, 0.1) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        transform: rotateX(60deg);
+        transform-origin: 50% 0;
+        animation: grid-scroll 15s linear infinite;
+        mask-image: linear-gradient(to bottom, black 20%, transparent 80%);
+      }
+      @keyframes grid-scroll {
+        0% { background-position: 0 0; }
+        100% { background-position: 0 50px; }
+      }
+
+      /* Mode 2: Data Stream (Rain) */
+      .bg-data-stream {
+        background-image: linear-gradient(0deg, transparent 24%, rgba(0, 255, 65, .1) 25%, rgba(0, 255, 65, .1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .1) 75%, rgba(0, 255, 65, .1) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 255, 65, .1) 25%, rgba(0, 255, 65, .1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .1) 75%, rgba(0, 255, 65, .1) 76%, transparent 77%, transparent);
+        background-size: 50px 50px;
+        animation: stream-scroll 20s linear infinite;
+      }
+      @keyframes stream-scroll {
+        0% { background-position: 0 0; }
+        100% { background-position: 0 100px; }
+      }
+
+      /* Mode 3: Pulse (Radar) */
+      .bg-pulse-radar {
+        background: radial-gradient(circle at 50% 50%, rgba(0, 255, 65, 0.15) 0%, transparent 60%);
+        animation: radar-pulse 4s infinite alternate;
+      }
+      @keyframes radar-pulse {
+        0% { opacity: 0.3; transform: scale(0.95); }
+        100% { opacity: 0.7; transform: scale(1.05); }
+      }
+
+      /* Scanlines & Bar */
+      .scanline-overlay {
+        position: fixed; inset: 0;
+        background: linear-gradient(to bottom, rgba(18,16,16,0) 50%, rgba(0,0,0,0.2) 50%);
+        background-size: 100% 4px; pointer-events: none; z-index: 9998; opacity: 0.6;
+      }
+      .scanner-bar {
+        position: fixed; top: 0; left: 0; right: 0; height: 5px;
+        background: rgba(0, 255, 65, 0.5);
+        box-shadow: 0 0 15px rgba(0, 255, 65, 0.8);
+        animation: scan-vertical 4s linear infinite;
+        z-index: 9999; pointer-events: none; opacity: 0.3;
+      }
+      @keyframes scan-vertical {
+        0% { top: -10%; opacity: 0; } 
+        100% { top: 110%; opacity: 0; }
+      }
+
+      /* Glitch Text */
+      .glitch { position: relative; color: #00ff41; }
+      .glitch::before, .glitch::after {
+        content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: #000000;
+      }
+      .glitch::before {
+        left: 2px; text-shadow: -1px 0 #008f11; clip: rect(24px, 550px, 90px, 0);
+        animation: glitch-anim-2 3s infinite linear alternate-reverse;
+      }
+      .glitch::after {
+        left: -2px; text-shadow: -1px 0 #4dff79; clip: rect(85px, 550px, 140px, 0);
+        animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+      }
+      @keyframes glitch-anim-1 {
+        0% { clip: rect(20px, 9999px, 15px, 0); } 100% { clip: rect(30px, 9999px, 70px, 0); }
+      }
+      @keyframes glitch-anim-2 {
+        0% { clip: rect(10px, 9999px, 80px, 0); } 100% { clip: rect(50px, 9999px, 20px, 0); }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
